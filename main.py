@@ -15,7 +15,7 @@ def loginChecker(root, error_label, login, password):
     if result:
         mainMenu(root)
     else:
-        error_label.configure(text="Неверный логин или пароль", fg="red")  # Change fg_color to fg
+        error_label.configure(text="Неверный логин или пароль", fg="red")
 
 def mainMenu(root):
     # Очистка окна
@@ -70,8 +70,6 @@ def mainMenu(root):
 
     importDataButton.pack(pady=10)
     exportDataButton.pack(pady=10)
-
-
 
 def main():
     # Проверка существования базы данных
