@@ -7,20 +7,20 @@
 # Структура БД
 
 library
-│
-├─ books
-│ └─ id (Primary Key)
-│ ├─ title
-│ ├─ author
-│ ├─ year
-│ ├─ genre
-│ └─ quantity
-│
-└─ readers
-└─ id (Primary Key)
-├─ name
-├─ surname
-└─ readerId
+│\n
+├─ books\n
+│ └─ id (Primary Key)\n
+│ ├─ title\n
+│ ├─ author\n
+│ ├─ year\n
+│ ├─ genre\n
+│ └─ quantity\n
+│\n
+└─ readers\n
+└─ id (Primary Key)\n
+├─ name\n
+├─ surname\n
+└─ readerId\n
 
 # Функции
 
