@@ -67,3 +67,27 @@ def bookSearch(title=None, author=None, year=None, genre=None, quantity=None):
     except Exception as e:
         print(f"Ошибка bookSearch: {e}")
         return False
+    
+def giveBook(readerId, bookId, returnDate):
+    try:
+        conn = sqlite3.connect('library.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO issuedBooks VALUES (NULL, ?, ?, ?)", (readerId, bookId, returnDate))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print('Ошибка giveBook:', e)
+        return False
+    
+def returnBook(bookId):
+    try:
+        conn = sqlite3.connect('library.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM issuedBooks WHERE bookId = ?", (bookId,))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print('Ошибка returnBook:', e)
+        return False
