@@ -6,7 +6,7 @@
 
 ## Структура БД
 
-- library
+- library.db
   - books
     - id
     - title
