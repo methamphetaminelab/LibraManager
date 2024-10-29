@@ -9,18 +9,18 @@
 library
 │
 ├─ books
-│ └─ id (Primary Key)
-│ ├─ title
-│ ├─ author
-│ ├─ year
-│ ├─ genre
-│ └─ quantity
+│  └─ id (Primary Key)
+│     ├─ title
+│     ├─ author
+│     ├─ year
+│     ├─ genre
+│     └─ quantity
 │
 └─ readers
-└─ id (Primary Key)
-├─ name
-├─ surname
-└─ readerId
+   └─ id (Primary Key)
+      ├─ name
+      ├─ surname
+      └─ readerId
 
 # Функции
 
