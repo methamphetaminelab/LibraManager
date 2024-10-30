@@ -7,6 +7,7 @@ def readerAdd(name, surname, readerId):
         cursor.execute("INSERT INTO readers VALUES (NULL, ?, ?, ?)", (name, surname, readerId))
         conn.commit()
         conn.close()
+        print('Читатель добавлен')
         return True
     except Exception as e:
         print(f"Ошибка readerAdd: {e}")
@@ -19,6 +20,7 @@ def readerDelete(id):
         cursor.execute("DELETE FROM readers WHERE id = ?", (id,))
         conn.commit()
         conn.close()
+        print('Читатель удален')
         return True
     except Exception as e:
         print(f"Ошибка readerDelete: {e}")
@@ -31,6 +33,7 @@ def readerUpdate(id, name, surname, readerId):
         cursor.execute("UPDATE readers SET name = ?, surname = ?, readerId = ? WHERE id = ?", (name, surname, readerId, id))
         conn.commit()
         conn.close()
+        print('Читатель обновлен')
         return True
     except Exception as e:
         print(f"Ошибка readerUpdate: {e}")
@@ -57,6 +60,7 @@ def readerSearch(name=None, surname=None, readerId=None):
         cursor.execute(query, parameters)
         rows = cursor.fetchall()
         conn.close()
+        print(f'Читатели найдены\n{rows}')
         return rows
     except Exception as e:
         print(f"Ошибка readerSearch: {e}")

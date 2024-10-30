@@ -6,6 +6,7 @@ from reportsManager import *
 from databaseManager import *
 from bookTabsManager import *
 from reportTabsManager import *
+from readersTabsManager import *
 from utils import *
 
 def mainMenu(root):
@@ -54,17 +55,26 @@ def mainMenu(root):
     updateReaderTab = readersTabview.add("Обновить читателя")
     searchReaderTab = readersTabview.add("Поиск читателя")
 
+    # Заполняем под-вкладки для читателей
+    addReaderMenu(addReaderTab)
+    deleteReaderMenu(deleteReaderTab)
+    updateReaderMenu(updateReaderTab)
+    searchReaderMenu(searchReaderTab)
+
     # Под-вкладки для отчетов
     reportsTabview = ctk.CTkTabview(reportsTab)
     reportsTabview.pack(expand=True, fill="both")
 
-    bookReportTab = reportsTabview.add("Отчет по параметрам")
     globalReportTab = reportsTabview.add("Общий отчет")
+    parameterReportTab = reportsTabview.add("Отчет по параметрам")
     readerReportTab = reportsTabview.add("Отчет по читателю")
-    returnReportTab = reportsTabview.add("Отчет по задолжностях")
+    returnReportTab = reportsTabview.add("Отчет по задолжностям")
 
     # Заполняем под-вкладки для отчетов
     globalReportMenu(globalReportTab)
+    parameterReportMenu(parameterReportTab)
+    readerReportMenu(readerReportTab)
+    issuedReportMenu(returnReportTab)
 
     # Прочее
     importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=importDatabaseFromTXT)

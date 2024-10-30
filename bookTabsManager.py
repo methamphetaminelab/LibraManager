@@ -57,7 +57,7 @@ def searchBookMenu(searchBookTab):
     ctk.CTkButton(searchBookTab, text="Поиск книги", command=lambda: bookSearch(title.get(), author.get(), year.get(), genre.get(), quantity.get())).pack(pady=10)
 
 def giveBookMenu(giveBookTab):
-    readerId = ctk.CTkEntry(giveBookTab, placeholder_text="ID читателя")
+    readerId = ctk.CTkEntry(giveBookTab, placeholder_text="Номер читательского билета")
     readerId.pack(pady=10)
     bookId = ctk.CTkEntry(giveBookTab, placeholder_text="ID книги")
     bookId.pack(pady=10)
@@ -67,7 +67,7 @@ def giveBookMenu(giveBookTab):
     ctk.CTkButton(giveBookTab, text="Выдать книгу", command=lambda: giveBook(readerId.get(), bookId.get(), returnDate.get())).pack(pady=10)
 
 def returnBookMenu(returnBookTab):    
-    readerId = ctk.CTkEntry(returnBookTab, placeholder_text="ID читателя")
+    readerId = ctk.CTkEntry(returnBookTab, placeholder_text="Номер читательского билета")
     readerId.pack(pady=10)
     bookdId = ctk.CTkEntry(returnBookTab, placeholder_text="ID книги")
     bookdId.pack(pady=10)
