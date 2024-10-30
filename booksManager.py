@@ -7,6 +7,7 @@ def bookAdd(title, author, year, genre, quantity):
         cursor.execute("INSERT INTO books VALUES (NULL, ?, ?, ?, ?, ?)", (title, author, year, genre, quantity))
         conn.commit()
         conn.close()
+        print('Книга добавлена')
         return True
     except Exception as e:
         print('Ошибка bookAdd:', e)
@@ -19,6 +20,7 @@ def bookDelete(id):
         cursor.execute("DELETE FROM books WHERE id = ?", (id,))
         conn.commit()
         conn.close()
+        print('Книга удалена')
         return True
     except Exception as e:
         print('Ошибка bookDelete:', e)
@@ -31,6 +33,7 @@ def bookUpdate(id, title, author, year, genre, quantity):
         cursor.execute("UPDATE books SET title = ?, author = ?, year = ?, genre = ?, quantity = ? WHERE id = ?", (title, author, year, genre, quantity, id))
         conn.commit()
         conn.close()
+        print('Книга обновлена')
         return True
     except Exception as e:
         print('Ошибка bookUpdate:', e)
@@ -63,6 +66,7 @@ def bookSearch(title=None, author=None, year=None, genre=None, quantity=None):
         cursor.execute(query, parameters)
         rows = cursor.fetchall()
         conn.close()
+        print(f'Книги найдены\n{rows}')
         return rows
     except Exception as e:
         print(f"Ошибка bookSearch: {e}")
@@ -75,18 +79,20 @@ def giveBook(readerId, bookId, returnDate):
         cursor.execute("INSERT INTO issuedBooks VALUES (NULL, ?, ?, ?)", (readerId, bookId, returnDate))
         conn.commit()
         conn.close()
+        print('Книга выдана')
         return True
     except Exception as e:
         print('Ошибка giveBook:', e)
         return False
     
-def returnBook(bookId):
+def returnBook(readerId, bookId):
     try:
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM issuedBooks WHERE bookId = ?", (bookId,))
+        cursor.execute("DELETE FROM issuedBooks WHERE readerId = ? AND bookId = ?", (readerId, bookId))
         conn.commit()
         conn.close()
+        print('Книга возвращена')
         return True
     except Exception as e:
         print('Ошибка returnBook:', e)

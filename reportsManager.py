@@ -4,11 +4,20 @@ def globalReport():
     try:
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
+        
         cursor.execute("SELECT COUNT(*) FROM books")
         count = cursor.fetchone()[0]
-        conn.close()
         print(f"Количество книг в библиотеке: {count}")
-        return count
+        
+        cursor.execute("SELECT * FROM books")
+        rows = cursor.fetchall()
+        
+        for row in rows:
+            print(f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}")
+        
+        conn.close()
+        return count, rows
+    
     except Exception as e:
         print(f"Ошибка globalReport: {e}")
         return False

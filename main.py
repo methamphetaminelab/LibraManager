@@ -1,21 +1,12 @@
 import customtkinter as ctk
-import sqlite3  # Make sure to import sqlite3
+import sqlite3
 from booksManager import *
 from readersManager import *
 from reportsManager import *
 from databaseManager import *
-
-def loginChecker(root, error_label, login, password):
-    conn = sqlite3.connect('library.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM admins WHERE login = ? AND password = ?", (login, password))
-    result = cursor.fetchone()
-    conn.close()
-    
-    if result:
-        mainMenu(root)
-    else:
-        error_label.configure(text="Неверный логин или пароль", fg="red")
+from bookTabsManager import *
+from reportTabsManager import *
+from utils import *
 
 def mainMenu(root):
     # Очистка окна
@@ -46,6 +37,14 @@ def mainMenu(root):
     giveBookTab = booksTabview.add("Выдать книгу")
     returnBookTab = booksTabview.add("Вернуть книгу")
 
+    # Заполняем под-вкладки для книг
+    addBookMenu(addBookTab)
+    deleteBookMenu(deleteBookTab)
+    updateBookMenu(updateBookTab)
+    searchBookMenu(searchBookTab)
+    giveBookMenu(giveBookTab)
+    returnBookMenu(returnBookTab)
+
     # Под-вкладки для читателей
     readersTabview = ctk.CTkTabview(readersTab)
     readersTabview.pack(expand=True, fill="both")
@@ -63,6 +62,9 @@ def mainMenu(root):
     globalReportTab = reportsTabview.add("Общий отчет")
     readerReportTab = reportsTabview.add("Отчет по читателю")
     returnReportTab = reportsTabview.add("Отчет по задолжностях")
+
+    # Заполняем под-вкладки для отчетов
+    globalReportMenu(globalReportTab)
 
     # Прочее
     importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=importDatabaseFromTXT)
