@@ -39,7 +39,7 @@ def createDatabase():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             surname TEXT NOT NULL,
-            readerId TEXT NOT NULL UNIQUE
+            readerId INTEGER NOT NULL UNIQUE
         )
         ''')
 
@@ -62,7 +62,64 @@ def createDatabase():
     except Exception as e:
         print(f'Ошибка createDatabase: {e}')
         return False
+
+# def createDatabase():
+#     try:
+#         print('Процесс создания базы данных начат..')
+#         conn = sqlite3.connect('library.db')
+#         cursor = conn.cursor()
+
+#         cursor.execute('''
+#         CREATE TABLE IF NOT EXIST users (
+#                        id serial PRIMARY KEY AUTOINCREMENT,
+#                        role integer,
+#                        login text NOT NULL UNIQUE,
+#                        password text NOT NULL
+#         )
+#         ''')
     
+#         cursor.execute("INSERT INTO admin VALUES (NULL, 'admin', 'admin')")
+
+#         cursor.execute('''
+#         CREATE TABLE IF NOT EXIST books(
+#                        id serial PRIMARY KEY AUTOINCREMENT,
+#                        title text NOT NULL,
+#                        author text NOT NULL,
+#                        year integer NOT NULL,
+#                        genre text NOT NULL,
+#                        quantity integer NOT NULL
+#         )
+#         ''')
+
+#         cursor.execute('''
+#         CREATE TABLE IF NOT EXIST readers(
+#                        id serial PRIMARY KEY AUTOINCREMENT,
+#                        name text NOT NULL,
+#                        surname text NOT NULL,
+#                        readerId text NOT NULLUNIQUE
+#         )
+#         ''')
+
+#         cursor.execute('''
+#         CREATE TABLE IF NOT EXIST issuedBooks(
+#                        id integer PRIMARY KEY AUTOINCREMENT,
+#                        readerId integer NOT NULL,
+#                        bookId integer NOT NULL,
+#                        dateToReturn text NOT NULL,
+#                        FOREIGN KEY (readerId) REFERENCES readers(id),
+#                        FOREIGN KEY (bookId) REFERENCES books(id)
+#         )
+#         ''')
+
+#         conn.commit()
+#         conn.close()
+
+#         print('База данных успешно создана')
+#         return True
+#     except Exception as e:
+#         print('Ошибка createDatabase: {e}')
+#         return False
+
 def exportDatabaseToTXT():
     try:
         print('Экспорт базы данных в txt')

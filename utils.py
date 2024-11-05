@@ -17,4 +17,4 @@ def loginChecker(root, error_label, login, password):
     if result:
         mainMenu(root)
     else:
-        error_label.configure(text="Неверный логин или пароль", fg="red")
+        error_label.configure(text="Неверный логин или пароль", fg_color="red")
