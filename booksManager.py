@@ -8,6 +8,14 @@ def bookAdd(title, author, year, genre, quantity, error_label):
 
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM books WHERE title = ? AND author = ?", (title, author))
+        existing_book = cursor.fetchone()
+        if existing_book:
+            error_label.configure(text='Такая книга уже существует', fg_color='red')
+            conn.close()
+            return False
+
         cursor.execute("INSERT INTO books VALUES (NULL, ?, ?, ?, ?, ?)", (title, author, year, genre, quantity))
         conn.commit()
         conn.close()
@@ -135,12 +143,15 @@ def returnBook(readerId, bookId, error_label):
             conn.close()
             return False
 
+        cursor.execute("UPDATE books SET quantity = quantity + 1 WHERE id = ?", (bookId,))
+
         cursor.execute("DELETE FROM issuedBooks WHERE readerId = ? AND bookId = ?", (readerId, bookId))
+
         conn.commit()
         conn.close()
 
-        print('Книга возвращена')
-        error_label.configure(text='Книга возвращена', fg_color='green')
+        print('Книга возвращена и количество увеличено')
+        error_label.configure(text='Книга возвращена и количество увеличено', fg_color='green')
         return True
     except Exception as e:
         print('Ошибка returnBook:', e)

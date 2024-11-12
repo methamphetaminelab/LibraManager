@@ -7,7 +7,7 @@ from databaseManager import *
 from bookTabsManager import *
 from reportTabsManager import *
 from readersTabsManager import *
-from utils import *
+from utils import loginChecker
 
 def mainMenu(root):
     # Очистка окна
@@ -77,8 +77,8 @@ def mainMenu(root):
     issuedReportMenu(returnReportTab)
 
     # Прочее
-    importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=importDatabaseFromTXT)
-    exportDataButton = ctk.CTkButton(otherTab, text="Экспорт данных", command=exportDatabaseToTXT)
+    importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=importDatabaseFromCSV)
+    exportDataButton = ctk.CTkButton(otherTab, text="Экспорт данных", command=exportDatabaseToCSV)
 
     importDataButton.pack(pady=10)
     exportDataButton.pack(pady=10)
@@ -98,11 +98,11 @@ def main():
     login.pack(pady=10)
     password.pack(pady=10)
 
-    error_label = ctk.CTkLabel(root, text="")
-    error_label.pack(pady=10)
-
     loginButton = ctk.CTkButton(root, text="Войти", command=lambda: loginChecker(root, error_label, login.get(), password.get()))
     loginButton.pack(pady=10)
+
+    error_label = ctk.CTkLabel(root, text="")
+    error_label.pack(pady=10)
 
     root.mainloop()
 

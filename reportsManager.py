@@ -1,66 +1,61 @@
 import sqlite3
+import customtkinter as ctk
 
-def globalReport():
+def globalReport(error_label, report_frame):
     try:
+        for widget in report_frame.winfo_children():
+            widget.destroy()
+
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
         
         cursor.execute("SELECT COUNT(*) FROM books")
         count = cursor.fetchone()[0]
-        print(f"Количество книг в библиотеке: {count}")
         
         cursor.execute("SELECT * FROM books")
         rows = cursor.fetchall()
-        
-        for row in rows:
-            print(f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}")
-        
         conn.close()
-        return count, rows
-    
+
+        print(f"Количество книг: {count}\n{rows}")
+        error_label = error_label.configure(text=f"Количество книг: {count}", fg_color='transparent')
+
+        for row in rows:
+            ctk.CTkLabel(report_frame, text=f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}").pack(pady=5)
     except Exception as e:
         print(f"Ошибка globalReport: {e}")
+        error_label = error_label.configure(text=f"Ошибка globalReport: {e}", fg_color='red')
         return False
-
-def parameterReport(title=None, author=None, year=None, genre=None, quantity=None):
+    
+def parameterReport(genre, error_label, report_frame):
     try:
+        for widget in report_frame.winfo_children():
+            widget.destroy()
+
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
 
-        query = "SELECT COUNT(*) FROM books WHERE 1=1"
-        parameters = []
-
-        if title is not None:
-            query += " AND title = ?"
-            parameters.append(title)
-        if author is not None:
-            query += " AND author = ?"
-            parameters.append(author)
-        if year is not None:
-            query += " AND year = ?"
-            parameters.append(year)
-        if genre is not None:
-            query += " AND genre = ?"
-            parameters.append(genre)
-        if quantity is not None:
-            query += " AND quantity = ?"
-            parameters.append(quantity)
-
-        cursor.execute(query, parameters)
+        cursor.execute("SELECT COUNT(*) FROM books WHERE genre LIKE ?", (f"%{genre}%",))
         count = cursor.fetchone()[0]
 
-        cursor.execute(query, parameters)
+        cursor.execute("SELECT * FROM books WHERE genre LIKE ?", (f"%{genre}%",))
         rows = cursor.fetchall()
         conn.close()
 
-        print(f"Количество книг по заданным параметрам: {count}")
-        return count, rows
+        print(f"Количество книг по заданным параметрам: {count}\n{rows}")
+        error_label = error_label.configure(text=f'Количество книг по жанрам: {count}', fg_color='transparent')
+        for row in rows:
+            ctk.CTkLabel(report_frame, text=f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}").pack(pady=5)
+
     except Exception as e:
-        print(f"Ошибка generateBooksReport: {e}")
+        print(f"Ошибка parameterReport: {e}")
+        error_label = error_label.configure(text=f'Ошибка parameterReport: {e}', fg_color='red')
         return False
 
-def readerReport(readerId):
+def readerReport(readerId, error_label, report_frame):
     try:
+        for widget in report_frame.winfo_children():
+            widget.destroy()
+
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
 
@@ -69,17 +64,23 @@ def readerReport(readerId):
 
         cursor.execute("SELECT * FROM issuedBooks WHERE readerId = ?", (readerId,))
         rows = cursor.fetchall()
-
         conn.close()
 
         print(f"Количество выданных книг: {count}\n{rows}")
-        return count, rows
+        error_label = error_label.configure(text=f'Найнено: {count}', fg_color='transparent')
+        for row in rows:
+            ctk.CTkLabel(report_frame, text=f"Номер билета: {row[1]}, Номер книги: {row[2]}, Дата возврата: {row[3]}").pack(pady=5)
+
     except Exception as e:
         print(f"Ошибка readerReport: {e}")
+        error_label = error_label.configure(text=f"Ошибка readerReport: {e}", fg_color='red')
         return False
     
-def issuedReport():
+def issuedReport(error_label, report_frame):
     try:
+        for widget in report_frame.winfo_children():
+            widget.destroy()
+
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
 
@@ -88,9 +89,11 @@ def issuedReport():
         conn.close()
 
         print("Читатели с просроченными возвратами книг:\n")
+        error_label = error_label.configure(text='Читатели с просроченными возвратами книг:', fg_color='transparent')
         for row in rows:
-            print(f"{row[0]} {row[1]}, ID: {row[2]}, дата возврата: {row[3]}")
-        return rows
+            ctk.CTkLabel(report_frame, text=f"Номер билета: {row[1]}, Номер книги: {row[2]}, Дата возврата: {row[3]}").pack(pady=5)
+
     except Exception as e:
         print(f"Ошибка issuedReport: {e}")
+        error_label = error_label.configure(text=f"Ошибка issuedReport: {e}", fg_color='red')
         return False

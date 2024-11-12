@@ -1,5 +1,7 @@
 import sqlite3
+import csv
 import os
+import pandas as pd
 
 def checkDatabase():
     if os.path.exists('library.db'):
@@ -63,130 +65,62 @@ def createDatabase():
         print(f'Ошибка createDatabase: {e}')
         return False
 
-# def createDatabase():
-#     try:
-#         print('Процесс создания базы данных начат..')
-#         conn = sqlite3.connect('library.db')
-#         cursor = conn.cursor()
-
-#         cursor.execute('''
-#         CREATE TABLE IF NOT EXIST users (
-#                        id serial PRIMARY KEY AUTOINCREMENT,
-#                        role integer,
-#                        login text NOT NULL UNIQUE,
-#                        password text NOT NULL
-#         )
-#         ''')
-    
-#         cursor.execute("INSERT INTO admin VALUES (NULL, 'admin', 'admin')")
-
-#         cursor.execute('''
-#         CREATE TABLE IF NOT EXIST books(
-#                        id serial PRIMARY KEY AUTOINCREMENT,
-#                        title text NOT NULL,
-#                        author text NOT NULL,
-#                        year integer NOT NULL,
-#                        genre text NOT NULL,
-#                        quantity integer NOT NULL
-#         )
-#         ''')
-
-#         cursor.execute('''
-#         CREATE TABLE IF NOT EXIST readers(
-#                        id serial PRIMARY KEY AUTOINCREMENT,
-#                        name text NOT NULL,
-#                        surname text NOT NULL,
-#                        readerId text NOT NULLUNIQUE
-#         )
-#         ''')
-
-#         cursor.execute('''
-#         CREATE TABLE IF NOT EXIST issuedBooks(
-#                        id integer PRIMARY KEY AUTOINCREMENT,
-#                        readerId integer NOT NULL,
-#                        bookId integer NOT NULL,
-#                        dateToReturn text NOT NULL,
-#                        FOREIGN KEY (readerId) REFERENCES readers(id),
-#                        FOREIGN KEY (bookId) REFERENCES books(id)
-#         )
-#         ''')
-
-#         conn.commit()
-#         conn.close()
-
-#         print('База данных успешно создана')
-#         return True
-#     except Exception as e:
-#         print('Ошибка createDatabase: {e}')
-#         return False
-
-def exportDatabaseToTXT():
+def exportDatabaseToCSV():
     try:
-        print('Экспорт базы данных в txt')
+        print('Экспорт базы данных в CSV...')
         conn = sqlite3.connect('library.db')
-        cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM admins')
-        admins = cursor.fetchall()
-        with open('admins.txt', 'w', encoding='utf-8') as file:
-            for admin in admins:
-                file.write(f"ID: {admin[0]}, Логин: {admin[1]}, Пароль: {admin[2]}\n")
+        admins = pd.read_sql_query("SELECT *, 'admins' as table_name FROM admins", conn)
+        books = pd.read_sql_query("SELECT *, 'books' as table_name FROM books", conn)
+        readers = pd.read_sql_query("SELECT *, 'readers' as table_name FROM readers", conn)
+        issuedBooks = pd.read_sql_query("SELECT *, 'issuedBooks' as table_name FROM issuedBooks", conn)
 
-        cursor.execute('SELECT * FROM books')
-        books = cursor.fetchall()
-        with open('books.txt', 'w', encoding='utf-8') as file:
-            for book in books:
-                file.write(f"ID: {book[0]}, Название: {book[1]}, Автор: {book[2]}, Год: {book[3]}, Жанр: {book[4]}, Количество: {book[5]}\n")
+        data = pd.concat([admins, books, readers, issuedBooks], ignore_index=True)
 
-        cursor.execute('SELECT * FROM readers')
-        readers = cursor.fetchall()
-        with open('readers.txt', 'w', encoding='utf-8') as file:
-            for reader in readers:
-                file.write(f"ID: {reader[0]}, Имя: {reader[1]}, Фамилия: {reader[2]}, ID читателя: {reader[3]}\n")
-
-        cursor.execute('SELECT * FROM issuedBooks')
-        issuedBooks = cursor.fetchall()
-        with open('issuedBooks.txt', 'w', encoding='utf-8') as file:
-            for issuedBook in issuedBooks:
-                file.write(f"ID: {issuedBook[0]}, ID читателя: {issuedBook[1]}, ID книги: {issuedBook[2]}, Дата возврата: {issuedBook[3]}\n")
-
+        data.to_csv('library.csv', index=False, encoding='utf-8')
+        
         conn.close()
-        print('Экспорт базы данных в txt успешен')
+        print('Экспорт базы данных в CSV завершён')
         return True
     except Exception as e:
-        print(f'Ошибка exportDatabaseToTXT: {e}')
+        print(f'Ошибка exportDatabaseToCSV: {e}')
         return False
 
-def importDatabaseFromTXT():
+def importDatabaseFromCSV():
     try:
-        print('Импорт базы данных из txt')
+        print('Импорт базы данных из CSV...')
         conn = sqlite3.connect('library.db')
-        cursor = conn.cursor()
 
-        with open('admins.txt', 'r', encoding='utf-8') as file:
-            for line in file:
-                admin = line.strip().split(', ')
-                cursor.execute("INSERT INTO admins VALUES (?, ?, ?)", admin)
+        data = pd.read_csv('library.csv', encoding='utf-8')
 
-        with open('books.txt', 'r', encoding='utf-8') as file:
-            for line in file:
-                book = line.strip().split(', ')
-                cursor.execute("INSERT INTO books VALUES (?, ?, ?, ?, ?, ?)", book)
+        for table_name in data['table_name'].unique():
+            table_data = data[data['table_name'] == table_name].drop(columns=['table_name'])
 
-        with open('readers.txt', 'r', encoding='utf-8') as file:
-            for line in file:
-                reader = line.strip().split(', ')
-                cursor.execute("INSERT INTO readers VALUES (?, ?, ?, ?)", reader)
+            if table_name == 'admins':
+                table_data = table_data[['id', 'login', 'password']]
+                table_data.to_sql('admins', conn, if_exists='replace', index=False)
 
-        with open('issuedBooks.txt', 'r', encoding='utf-8') as file:
-            for line in file:
-                issuedBook = line.strip().split(', ')
-                cursor.execute("INSERT INTO issuedBooks VALUES (?, ?, ?, ?)", issuedBook)
+            elif table_name == 'books':
+                table_data = table_data[['id', 'title', 'author', 'year', 'genre', 'quantity']]
+                table_data['year'] = table_data['year'].astype(int)
+                table_data['quantity'] = table_data['quantity'].astype(int)
+                table_data.to_sql('books', conn, if_exists='replace', index=False)
+
+            elif table_name == 'readers':
+                table_data = table_data[['id', 'name', 'surname', 'readerId']]
+                table_data['readerId'] = table_data['readerId'].astype(int)
+                table_data.to_sql('readers', conn, if_exists='replace', index=False)
+
+            elif table_name == 'issuedBooks':
+                table_data = table_data[['id', 'readerId', 'bookId', 'dateToReturn']]
+                table_data['readerId'] = table_data['readerId'].astype(int)
+                table_data['bookId'] = table_data['bookId'].astype(int)
+                table_data.to_sql('issuedBooks', conn, if_exists='replace', index=False)
 
         conn.commit()
         conn.close()
-        print('Импорт базы данных из txt успешен')
+        print('Импорт базы данных из CSV завершён')
         return True
     except Exception as e:
-        print(f'Ошибка importDatabaseFromTXT: {e}')
+        print(f'Ошибка importDatabaseFromCSV: {e}')
         return False

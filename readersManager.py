@@ -81,7 +81,7 @@ def readerSearch(readerId, error_label):
             return False
         conn.close()
         print(f'Читатели найдены\n{rows}')
-        error_label.configure(text=f'Читатели найдены\n{rows}', fg_color='green')
+        error_label.configure(text=f'Читатели найдены\n{rows}', fg_color='transparent')
         return rows
     except Exception as e:
         print(f"Ошибка readerSearch: {e}")
