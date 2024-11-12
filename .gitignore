@@ -1,5 +1,5 @@
 .git/
 .vscode/
 __pycache__/
-*.csv
-*.db
+library.csv
+library.db
