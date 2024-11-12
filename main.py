@@ -76,11 +76,13 @@ def mainMenu(root):
     issuedReportMenu(returnReportTab)
 
     # Прочее
-    importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=importDatabaseFromCSV)
-    exportDataButton = ctk.CTkButton(otherTab, text="Экспорт данных", command=exportDatabaseToCSV)
+    importDataButton = ctk.CTkButton(otherTab, text="Импорт данных", command=lambda: importDatabaseFromCSV(export_error_label))
+    exportDataButton = ctk.CTkButton(otherTab, text="Экспорт данных", command=lambda: exportDatabaseToCSV(export_error_label))
+    export_error_label = ctk.CTkLabel(otherTab, text='', fg_color='transparent')
 
     importDataButton.pack(pady=10)
     exportDataButton.pack(pady=10)
+    export_error_label.pack(pady=10)
 
 def loginChecker(root, error_label, login, password):
     conn = sqlite3.connect('library.db')

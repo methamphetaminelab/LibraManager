@@ -1,4 +1,5 @@
 import sqlite3
+import customtkinter as ctk
 
 def bookAdd(title, author, year, genre, quantity, error_label):
     try:
@@ -71,25 +72,45 @@ def bookUpdate(id, title, author, year, genre, quantity, error_label):
         error_label.configure(text=f'Книга не обновлена: {e}', fg_color='red')
         return False
 
-def bookSearch(genre, error_label):
+def bookSearch(title, author, genre, error_label, report_frame):
     try:
-        if genre == '':
-            error_label.configure(text='Заполните все поля', fg_color='red')
+        for widget in report_frame.winfo_children():
+            widget.destroy()
+
+        if title == '' and author == '' and genre == '':
+            error_label.configure(text='Заполните хотя бы одно поле для поиска', fg_color='red')
             return False
+
+        query = "SELECT * FROM books WHERE 1=1"
+        params = []
+
+        if title != '':
+            query += " AND title LIKE ?"
+            params.append(f'%{title}%')
+        if author != '':
+            query += " AND author LIKE ?"
+            params.append(f'%{author}%')
+        if genre != '':
+            query += " AND genre LIKE ?"
+            params.append(f'%{genre}%')
 
         conn = sqlite3.connect('library.db')
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM books WHERE genre = ?", (genre,))
+        cursor.execute(query, tuple(params))
         rows = cursor.fetchall()
-        if len(rows) == 0:
-            error_label.configure(text='Книги не найдены', fg_color='red')
-            conn.close()
-            return False
         conn.close()
 
+        if len(rows) == 0:
+            error_label.configure(text='Книги не найдены', fg_color='red')
+            return False
+
         print(f'Книги найдены\n{rows}')
-        error_label.configure(text=f'Книги найдены\n{rows}', fg_color='green')
-        return rows
+        for row in rows:
+            ctk.CTkLabel(report_frame, text=f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}").pack(pady=5)
+
+        error_label.configure(text="", fg_color="transparent")
+        return True
+
     except Exception as e:
         print(f"Ошибка bookSearch: {e}")
         error_label.configure(text=f'Книги не найдены: {e}', fg_color='red')

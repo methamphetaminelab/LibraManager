@@ -51,13 +51,23 @@ def updateBookMenu(updateBookTab):
     error_label.pack(pady=10)
 
 def searchBookMenu(searchBookTab):
+    title = ctk.CTkEntry(searchBookTab, placeholder_text="Жанр")
+    title.pack(pady=10)
+
+    author = ctk.CTkEntry(searchBookTab, placeholder_text="Автор")
+    author.pack(pady=10)
+
     genre = ctk.CTkEntry(searchBookTab, placeholder_text="Жанр")
     genre.pack(pady=10)
 
-    ctk.CTkButton(searchBookTab, text="Поиск книги", command=lambda: bookSearch(genre.get(), error_label)).pack(pady=10)
+    ctk.CTkButton(searchBookTab, text="Поиск книги", command=lambda: bookSearch(title.get(), author.get(), genre.get(), error_label, report_frame)).pack(pady=10)
 
     error_label = ctk.CTkLabel(searchBookTab, text='')
     error_label.pack(pady=10)
+
+    report_frame = ctk.CTkFrame(searchBookTab)
+    report_frame.pack(pady=10, fill="both", expand=True)
+
 
 def giveBookMenu(giveBookTab):
     readerId = ctk.CTkEntry(giveBookTab, placeholder_text="Номер читательского билета")

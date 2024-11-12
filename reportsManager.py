@@ -17,13 +17,13 @@ def globalReport(error_label, report_frame):
         conn.close()
 
         print(f"Количество книг: {count}\n{rows}")
-        error_label = error_label.configure(text=f"Количество книг: {count}", fg_color='transparent')
+        error_label.configure(text=f"Количество книг: {count}", fg_color='transparent')
 
         for row in rows:
             ctk.CTkLabel(report_frame, text=f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}").pack(pady=5)
     except Exception as e:
         print(f"Ошибка globalReport: {e}")
-        error_label = error_label.configure(text=f"Ошибка globalReport: {e}", fg_color='red')
+        error_label.configure(text=f"Ошибка globalReport: {e}", fg_color='red')
         return False
     
 def parameterReport(genre, error_label, report_frame):
@@ -42,13 +42,13 @@ def parameterReport(genre, error_label, report_frame):
         conn.close()
 
         print(f"Количество книг по заданным параметрам: {count}\n{rows}")
-        error_label = error_label.configure(text=f'Количество книг по жанрам: {count}', fg_color='transparent')
+        error_label.configure(text=f'Количество книг по жанрам: {count}', fg_color='transparent')
         for row in rows:
             ctk.CTkLabel(report_frame, text=f"Книга ID: {row[0]}, Название: {row[1]}, Автор: {row[2]}, Год: {row[3]}, Жанр: {row[4]}, Количество: {row[5]}").pack(pady=5)
 
     except Exception as e:
         print(f"Ошибка parameterReport: {e}")
-        error_label = error_label.configure(text=f'Ошибка parameterReport: {e}', fg_color='red')
+        error_label.configure(text=f'Ошибка parameterReport: {e}', fg_color='red')
         return False
 
 def readerReport(readerId, error_label, report_frame):
@@ -67,13 +67,13 @@ def readerReport(readerId, error_label, report_frame):
         conn.close()
 
         print(f"Количество выданных книг: {count}\n{rows}")
-        error_label = error_label.configure(text=f'Найнено: {count}', fg_color='transparent')
+        error_label.configure(text=f'Найнено: {count}', fg_color='transparent')
         for row in rows:
             ctk.CTkLabel(report_frame, text=f"Номер билета: {row[1]}, Номер книги: {row[2]}, Дата возврата: {row[3]}").pack(pady=5)
 
     except Exception as e:
         print(f"Ошибка readerReport: {e}")
-        error_label = error_label.configure(text=f"Ошибка readerReport: {e}", fg_color='red')
+        error_label.configure(text=f"Ошибка readerReport: {e}", fg_color='red')
         return False
     
 def issuedReport(error_label, report_frame):
@@ -89,11 +89,11 @@ def issuedReport(error_label, report_frame):
         conn.close()
 
         print("Читатели с просроченными возвратами книг:\n")
-        error_label = error_label.configure(text='Читатели с просроченными возвратами книг:', fg_color='transparent')
+        error_label.configure(text='Читатели с просроченными возвратами книг:', fg_color='transparent')
         for row in rows:
             ctk.CTkLabel(report_frame, text=f"Номер билета: {row[1]}, Номер книги: {row[2]}, Дата возврата: {row[3]}").pack(pady=5)
 
     except Exception as e:
         print(f"Ошибка issuedReport: {e}")
-        error_label = error_label.configure(text=f"Ошибка issuedReport: {e}", fg_color='red')
+        error_label.configure(text=f"Ошибка issuedReport: {e}", fg_color='red')
         return False

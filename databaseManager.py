@@ -65,7 +65,7 @@ def createDatabase():
         print(f'Ошибка createDatabase: {e}')
         return False
 
-def exportDatabaseToCSV():
+def exportDatabaseToCSV(label):
     try:
         print('Экспорт базы данных в CSV...')
         conn = sqlite3.connect('library.db')
@@ -81,12 +81,14 @@ def exportDatabaseToCSV():
         
         conn.close()
         print('Экспорт базы данных в CSV завершён')
+        label.configure(text='Экспорт базы данных в CSV завершён', fg_color='green')
         return True
     except Exception as e:
         print(f'Ошибка exportDatabaseToCSV: {e}')
+        label.configure(text=f'Ошибка exportDatabaseToCSV: {e}', fg_color='red')
         return False
 
-def importDatabaseFromCSV():
+def importDatabaseFromCSV(label):
     try:
         print('Импорт базы данных из CSV...')
         conn = sqlite3.connect('library.db')
@@ -120,7 +122,9 @@ def importDatabaseFromCSV():
         conn.commit()
         conn.close()
         print('Импорт базы данных из CSV завершён')
+        label.configure(text='Импорт базы данных из CSV завершён', fg_color='green')
         return True
     except Exception as e:
         print(f'Ошибка importDatabaseFromCSV: {e}')
+        label.configure(text='Ошибка importDatabaseFromCSV: {e}', fg_color='red')
         return False
