@@ -121,7 +121,7 @@
 
 ## Использование
 
-Использовался [Python 3.11.8](https://www.python.org/)
+Использовался [Python 3.13.0](https://www.python.org/)
 
 1. `pip install -r requirements.txt`
 2. `python main.py`
