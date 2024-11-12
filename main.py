@@ -7,7 +7,6 @@ from databaseManager import *
 from bookTabsManager import *
 from reportTabsManager import *
 from readersTabsManager import *
-from utils import loginChecker
 
 def mainMenu(root):
     # Очистка окна
@@ -82,6 +81,18 @@ def mainMenu(root):
 
     importDataButton.pack(pady=10)
     exportDataButton.pack(pady=10)
+
+def loginChecker(root, error_label, login, password):
+    conn = sqlite3.connect('library.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM admins WHERE login = ? AND password = ?", (login, password))
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result:
+        mainMenu(root)
+    else:
+        error_label.configure(text="Неверный логин или пароль", fg_color="red")
 
 def main():
     # Проверка существования базы данных
