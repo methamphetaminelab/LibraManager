@@ -123,6 +123,6 @@
 
 Использовался [Python 3.11.8](https://www.python.org/)
 
-1. 'pip install -r requirements.txt'
-2. 'python main.py'
+1. `pip install -r requirements.txt`
+2. `python main.py`
 3. Вход в систему: (изначально admin/admin)
